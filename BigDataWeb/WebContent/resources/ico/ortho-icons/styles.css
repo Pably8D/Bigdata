@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+@font-face {
+   font-family: "ortho-icons";
+  src:url("#{resource['ico:ortho-icons/fonts/ortho-icons.eot']}");
+  src:url("#{resource['ico:ortho-icons/fonts/ortho-icons.eot?#iefix']}") format("embedded-opentype"),
+    url("#{resource['ico:ortho-icons/fonts/ortho-icons.woff']}") format("woff"),
+    url("#{resource['ico:ortho-icons/fonts/ortho-icons.ttf']}") format("truetype"),
+    url("#{resource['ico:ortho-icons/fonts/ortho-icons.svg#ortho-icons']}") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "ortho-icons" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="ortho-"]:before,
+[class*=" ortho-"]:before {
+  font-family: "ortho-icons" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ortho-premolar:before {
+  content: "\62";
+}
+.ortho-aligner:before {
+  content: "\61";
+}

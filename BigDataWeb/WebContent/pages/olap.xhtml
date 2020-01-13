@@ -1,0 +1,138 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	template="../layout/template_titlebar.xhtml">
+
+	<ui:define name="pageTitle">
+		<h1 class="titoloPagina">#{msgs.titolo_pagina_olap}</h1>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form" prependId="false">
+
+			<div class="ui-fluid">
+				<p:tooltip position="top" />
+				<div class="ui-g">
+					<div class="card card-w-title width100">
+						<h1>Operation OLAP</h1>
+						<p:outputPanel
+							style="margin-left: 25%;margin-right: 25%;margin-top:50px">
+							<p:outputPanel class="ui-g-12 ui-md-12 ui-md-12">
+								<p:outputPanel styleClass="ui-g-12 ui-md-12 ui-md-12"
+									id="select">
+									<h3>Select</h3>
+									<p:dataList value="#{olapMB.columnsSelected}" var="car"
+										styleClass="datalist-data-noborder"
+										rendered="#{olapMB.columnsSelected != null and olapMB.columnsSelected.size() >0}"
+										type="definition">
+										<p:outputLabel value="#{car}" />
+									</p:dataList>
+									<p:outputLabel value="*" style="padding-left:15%!important"
+										rendered="#{olapMB.columnsSelected == null or olapMB.columnsSelected.size() eq 0}" />
+								</p:outputPanel>
+
+								<p:outputPanel styleClass="ui-g-12 ui-md-12 ui-md-12">
+									<h3>From</h3>
+									<p:selectManyMenu value="#{olapMB.tableSelected}"
+										style="margin-left:15%!important">
+
+										<f:selectItems value="#{olapMB.listTable}"></f:selectItems>
+										<p:ajax update="where groupBy select"
+											listener="#{olapMB.getColumnsForTable()}"></p:ajax>
+									</p:selectManyMenu>
+								</p:outputPanel>
+
+								<p:outputPanel styleClass="ui-g-12 ui-md-12 ui-md-12" id="where">
+									<h3>Where</h3>
+									<p:outputPanel styleClass="ui-g-12 ui-md-12 ui-md-12"
+										style="margin-top:10px;margin-left:15%!important">
+										<pe:dynaForm id="dynaFormWhere"
+											value="#{olapMB.modelForWhere}" style="min-width: 100%;"
+											var="data">
+
+											<pe:dynaFormControl type="input" for="input">
+
+													= <p:inputText id="input" style="max-width: 90px;"
+													value="#{data.value}" />
+
+											</pe:dynaFormControl>
+
+											<pe:dynaFormControl type="select" for="sel">
+													= <p:selectOneMenu id="sel" style="    max-width: 90px;"
+													value="#{data.value}">
+													<f:selectItem itemLabel="Select one" itemValue="" />
+													<f:selectItems value="#{oltpMB.list}" var="tag"
+														itemLabel="#{tag.name}" itemValue="#{tag.id}" />
+												</p:selectOneMenu>
+											</pe:dynaFormControl>
+
+										</pe:dynaForm>
+									</p:outputPanel>
+
+								</p:outputPanel>
+								<p:outputPanel styleClass="ui-g-12 ui-md-12 ui-md-12"
+									id="groupBy">
+									<h3>Group By</h3>
+									<p:outputPanel styleClass="ui-g-12 ui-md-12 ui-md-12">
+										<p:selectManyCheckbox value="#{olapMB.columnsSelected}"
+											id="campi" style="margin-left:15%!important"
+											layout="responsive" columns="4">
+											<f:selectItems value="#{olapMB.column2Value.keySet()}"></f:selectItems>
+											<p:ajax update="select"></p:ajax>
+										</p:selectManyCheckbox>
+									</p:outputPanel>
+								</p:outputPanel>
+
+
+							</p:outputPanel>
+						</p:outputPanel>
+
+
+						<p:outputPanel class="ui-g-12 ui-md-12 ui-md-12">
+							<p:commandButton value="Vai" update="@form"
+								process=":form:dynaForm" action="#{olapMB.oltpActionMethod()}"
+								ajax="false" icon="ui-icon-search" iconPos="right"
+								style="width:auto" styleClass="right" />
+						</p:outputPanel>
+					</div>
+
+				</div>
+
+			</div>
+			<div class="card">
+				<h1 class="centerText">Result</h1>
+					<p:chart type="bar" model="#{olapMB.barModel}" widgetVar="cicci" 
+						id="cicci" style="width:auto;height:400px; margin: 0 auto;" />
+			</div>
+			<script type="text/javascript">
+			function metroExtenderSimulazioneSintesiBar() {
+
+
+				   this.cfg.grid = { drawBorder: false,
+				            shadow: false,        
+				            background: "white"};
+				   this.cfg.legend= {
+					        show: false,
+					        renderer: $.jqplot.EnhancedLegendRenderer,
+					       
+					        rendererOptions : {
+					        	seriesToggle : 'normal'
+			                }
+					        
+					    };
+
+				   this.cfg.redraw;
+			}
+			</script>
+			
+			
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

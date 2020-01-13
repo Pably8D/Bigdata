@@ -1,0 +1,249 @@
+
+@CHARSET "ISO-8859-1";
+
+.login_msgs{
+	position: absolute !important;
+	top: 0px !important;
+	width: 100% !important;
+}
+
+.left{
+	float: left;
+}
+
+.right{
+	float: right;
+}
+
+.bold{
+	font-weight: bold;
+}
+
+.marginL2{
+	margin-left: 2px;
+}
+
+.marginL5{
+	margin-left: 5px;
+}
+
+.marginL10{
+	margin-left: 10px;
+}
+
+.marginL25{
+	margin-left: 20px;
+}
+.marginT20{
+	margin-top: 20px;
+}
+
+.marginB20{
+	margin-bottom: 20px;
+}
+
+.padding20{
+	padding: 20px;
+}
+
+.paddingT10{
+	padding-top: 10px;
+}
+
+.width100{
+	width: 100%;
+}
+
+.width15{
+	width: 15%;
+}
+
+.width10{
+	width: 10%;
+}
+
+.width20{
+	width: 20%;
+}
+
+.width25{
+	width: 25%;
+}
+
+.width30{
+	width: 30%;
+}
+
+.width35{
+	width: 35%;
+}
+
+.width5{
+	width: 5%;
+}
+
+.width80{
+	width: 80%;
+}
+
+.numeric_cell{
+	text-align: right;
+}
+
+.valignMiddle{
+	vertical-align: middle;
+}
+
+.card a{
+	color: #757575 !important;
+}
+
+.card-panel {
+  transition: box-shadow .25s;
+  padding: 20px;
+  margin: 0.5rem 0 1rem 0;
+  border-radius: 2px;
+  background-color: #fff;
+}
+
+.textArea focus{
+	border-width: 1px!important;
+}
+
+/**Primefaces fix**/
+.ui-wizard-nav-next {
+    float: right!important;
+    width: 15%!important;
+}
+.ui-wizard-nav-back {
+    float: left!important;
+    width: 15%!important;
+}
+
+.ui-g.card.colorbox.marginB16{
+	margin-bottom: 16px !important;
+}
+
+.back_col_giallo{
+	background-color: #ffa000 !important;
+}
+
+.back_col_cyan{
+    background-color: #00bcd4 !important;
+}
+
+.color_grey{
+	color: #757575;
+}
+
+.color_giallo{
+	color: #ffa000 !important;
+}
+
+.ui-fileupload-buttonbar{
+	background: none !important;
+    border: none !important;
+    padding: 0px !important;
+}
+
+div.right > div.ui-fileupload-buttonbar{
+	float: right;
+}
+
+.ui-fileupload-content{
+/* 	display: none !important; */
+	border: none !important;
+}
+
+.ui-steps{
+	width: 100%;
+}
+
+.ui-steps-item{
+	width: 33%;
+}
+
+.ui-steps-item a{
+	width: 100%;
+}
+
+.font07{
+	font-size: 0.7em;
+}
+
+.color_1{
+	color: #4CAF50 !important;
+}
+
+.color_2{
+	color: #03A9F4 !important;
+}
+
+.color_3{
+	color: #673AB7 !important;
+}
+
+.color_4{
+	color: #00ABC0 !important;
+}
+
+.text_center{
+	text-align: center;
+}
+
+.div_center{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.text_right{
+	text-align: right;
+}
+.spaceCheckBox>div>div{
+	padding:5px!important;
+}
+.inputNumberTextWidht>input{
+	width:30px!important;
+	text-align: center!important;
+}
+
+.marginL5{
+	margin-left: 5px;
+}
+
+div.twolines label{
+	line-height: 1em;
+    height: 2em;
+    width: 85%;
+}
+
+.titoloPagina{
+	color: #757575;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.color_grey{
+	color: #757575;
+}
+
+.step_selected{
+	color: #0277BD !important;
+}
+
+#stlContent canvas{
+	height: 100% !important;
+	width: 100% !important;
+}
+
+.italic{
+    font-style: italic;
+}
+
+.valignMiddle{
+	vertical-align: middle;
+}
+
+.paddingR10{
+	padding-right: 10px;
+}

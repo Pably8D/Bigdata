@@ -1,0 +1,7 @@
+<classpath>
+  <container id="BigDataWeb!org.eclipse.jst.j2ee.internal.web.container">
+    <entry id="C:/Users/Trine/Workspace/ws-BigData2/BigDataWeb/WebContent/WEB-INF/lib/primefaces-6.0.jar">
+      <source-attachment-path>C:/Users/Trine/.m2/repository/org/primefaces/primefaces/6.0/primefaces-6.0-sources.jar</source-attachment-path>
+    </entry>
+  </container>
+</classpath>

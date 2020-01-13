@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+C:\Users\Trine\Workspace\ws-BigData2\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+1033880738.index
+730040121.index
+2271431568.index
+72397928.index
+385150086.index
+4167046829.index

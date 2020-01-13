@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                template="../layout/template.xhtml">
+
+	
+
+    <ui:define name="content">
+        <h:form>    
+        
+        <div class="ui-g-12 ui-md-12">
+
+						<div class="ui-g-12 ui-md-4">
+						<p:outputPanel styleClass="card cardtitled " 
+								rendered="#{homeMB.oltpInsertModel!=null}">
+								<h1 class="title">Insert</h1>
+								<p:chart type="line" model="#{homeMB.oltpInsertModel}" responsive="true" />
+							</p:outputPanel>
+						</div>
+						
+						<div class="ui-g-12 ui-md-4">
+						<p:outputPanel styleClass="card cardtitled "
+								rendered="#{homeMB.oltpUpdateModel!=null}">
+								<h1 class="title">Update</h1>
+								<p:chart type="line" model="#{homeMB.oltpUpdateModel}" responsive="true" />
+							</p:outputPanel>
+						</div>
+						
+						<div class="ui-g-12 ui-md-4">
+						<p:outputPanel styleClass="card cardtitled "
+								rendered="#{homeMB.oltpDeleteModel!=null}">
+								<h1 class="title">Delete</h1>
+								<p:chart type="line" model="#{homeMB.oltpDeleteModel}" responsive="true" />
+							</p:outputPanel>
+						</div>
+
+						
+					</div>
+        
+        
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,44 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pu="http://primefaces.org/ultima">
+    
+    <h:form id="menuform"> 
+        <div class="layout-menu #{guestPreferences.menuClass}">
+            <div class="nano">
+                <div class="nano-content menu-scroll-content">
+                    <ui:fragment rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
+                        <a id="profile-options" href="#">
+                        <div class="profile">
+                        </div>
+                        </a>
+                    
+                        <ul id="profile-menu" class="ultima-menu">
+                            <li role="menuitem">
+                            	<span>#{msgs.cognome}</span>
+                            	<span>#{msgs.nome}</span>
+                            </li>
+                            <li role="menuitem">
+                            	<span>#{msgs.corso}</span>
+                            </li>
+                            <li role="menuitem">
+                            	<span>#{msgs.anno_accademico}</span>
+                            </li>
+                            
+                        </ul>
+                    </ui:fragment>
+                    
+                    <pu:menu widgetVar="me" id="menu_left" >
+                        <p:menuitem id="um_dashboard" value="#{msgs.menu_home}" icon="&#xE871;" outcome="home" styleClass="#{view.viewId.endsWith('home.xhtml') ? 'myActive' : ''}"/>
+                        <p:menuitem id="um_oltp" value="#{msgs.menu_oltp}" icon="&#xE890;" outcome="oltp" styleClass="#{view.viewId.endsWith('oltp.xhtml') ? 'myActive' : ''}" />
+                        <p:menuitem id="um_olap" value="#{msgs.menu_olap}" icon="&#xE890;" outcome="olap" styleClass="#{view.viewId.endsWith('olap.xhtml') ? 'myActive' : ''}" />
+                        
+                    </pu:menu>
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:composition>
