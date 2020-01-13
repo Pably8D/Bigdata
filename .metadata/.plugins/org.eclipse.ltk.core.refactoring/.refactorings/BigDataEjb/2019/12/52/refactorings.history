@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename package &apos;it.bigdata.ejb.service.msq&apos; to &apos;it.bigdata.ejb.service.mysql&apos;&#x0D;&#x0A;- Original project: &apos;BigDataEjb&apos;&#x0D;&#x0A;- Original element: &apos;BigDataEjb/ejbModule/it.bigdata.ejb.service.msq&apos;&#x0D;&#x0A;- Renamed element: &apos;BigDataEjb/ejbModule/it.bigdata.ejb.service.mysql&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;it.bigdata.ejb.service.msq&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/ejbModule&lt;it.bigdata.ejb.service.msq" name="it.bigdata.ejb.service.mysql" qualified="false" references="true" stamp="1577363696562" textual="false" version="1.0"/>
-</session>
