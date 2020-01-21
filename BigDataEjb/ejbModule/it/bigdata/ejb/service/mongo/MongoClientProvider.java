@@ -38,7 +38,7 @@ public class MongoClientProvider {
       DB db = null;
 
       try {
-         db = this.mongoClient.getDB("stakoverflow");
+         db = this.mongoClient.getDB("stackoverflow");
          Set var2 = db.getCollectionNames();
          return db;
       } catch (Exception var3) {

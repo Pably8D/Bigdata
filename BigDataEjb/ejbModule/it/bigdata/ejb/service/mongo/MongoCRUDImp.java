@@ -10,6 +10,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import it.bigdata.dto.Tag;
+import it.bigdata.dto.constants.Tables;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -38,8 +40,11 @@ public class MongoCRUDImp extends MongoClientProvider implements MongoCRUD {
       return list;
    }
 
-   public Set<Tag> getAllTag() {
-      Iterator cursor = this.getDB().getCollection("question").distinct("TagsDB").iterator();
+   @SuppressWarnings("rawtypes")
+public Set<Tag> getAllTag() {
+	   
+	   
+      Iterator cursor = this.getDB().getCollection("QUESTION").distinct("TagCategory").iterator();
       Gson gson = new Gson();
       HashSet list = new HashSet();
 
@@ -74,9 +79,9 @@ public class MongoCRUDImp extends MongoClientProvider implements MongoCRUD {
 
    public Long insert(int numTransactionSelected, HashMap<String, String> column2Value, String tableSelected) {
       ObjectMapper mapper = new ObjectMapper();
-      Map<String, String> t = null;
+      Map<String, Object> t = null;
       Gson gson = new Gson();
-      DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
+      DBCollection collection = this.getDB().getCollection(tableSelected.toUpperCase());
       DBCursor c = collection.find().sort(new BasicDBObject("Id", -1)).limit(1);
 
       while(c.hasNext()) {
@@ -91,7 +96,7 @@ public class MongoCRUDImp extends MongoClientProvider implements MongoCRUD {
 
       int id = (new Double(Math.random())).intValue();
       if (t != null) {
-         id = new Integer((String)t.get("Id"));
+         id = (Integer)t.get("Id");
       }
 
       Date startTime = new Date();
@@ -180,12 +185,12 @@ public class MongoCRUDImp extends MongoClientProvider implements MongoCRUD {
       Cursor output;
       List pipeline2;
       DBObject p;
-      if (tables2Columnvalue.keySet().size() == 1) {
+      if (tables2Columnvalue.keySet().size() == 1 || (tables2Columnvalue.containsKey(Tables.QUESTION.getName().toUpperCase()) && tables2Columnvalue.containsKey(Tables.TAGS.getName().toUpperCase().concat("S")))) {
          Entry<String, HashMap<String, String>> entry = (Entry)tables2Columnvalue.entrySet().iterator().next();
          String tableSelected = (String)entry.getKey();
          HashMap<String, String> column2Value = (HashMap)entry.getValue();
          DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
-         if (column2Value != null && tables2columnsGroupBy.get(tableSelected) != null && ((List)tables2columnsGroupBy.get(tableSelected)).isEmpty()) {
+         if (column2Value != null && tables2columnsGroupBy.get(tableSelected)== null || ((List)tables2columnsGroupBy.get(tableSelected)).isEmpty()) {
             this.createWhereCondition(column2Value, where);
          } else {
             groupBy = this.createGroupByCondition((List)tables2columnsGroupBy.get(tableSelected));
@@ -225,7 +230,7 @@ public class MongoCRUDImp extends MongoClientProvider implements MongoCRUD {
                System.out.println(obj);
             }
          }
-      } else {
+      } else if(tables2Columnvalue.containsKey(Tables.USER.getName().toUpperCase()) && tables2Columnvalue.containsKey(Tables.QUESTION.getName().toUpperCase())){
          DBCollection coll = this.getDB().getCollection("user");
          if (tables2Columnvalue.get("user") != null) {
             this.createWhereConditionForGroupBy((HashMap)tables2Columnvalue.get("user"), whereForUser);
@@ -286,10 +291,8 @@ public class MongoCRUDImp extends MongoClientProvider implements MongoCRUD {
    private DBObject createGroupByCondition(List<String> columnsGroupBy) {
       DBObject groupBy = null;
       Map<String, Object> dbObjIdMap = new HashMap();
-      Iterator var5 = columnsGroupBy.iterator();
-
-      while(var5.hasNext()) {
-         String col = (String)var5.next();
+      if(columnsGroupBy!=null && !columnsGroupBy.isEmpty())
+      for(String col:columnsGroupBy) {
          dbObjIdMap.put(col, "$".concat("questions.").concat(col));
       }
 

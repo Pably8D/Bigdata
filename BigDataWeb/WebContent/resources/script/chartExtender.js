@@ -3,6 +3,7 @@ function skinChart() {
             this.cfg.shadow = false;
             this.cfg.title = '';
             this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
+            this.showTooltip = true;
             this.cfg.grid = {
                 background: '#ffffff',
                 borderColor: '#ffffff',
@@ -268,4 +269,6 @@ function skinChart() {
                     style: 'circle'
                 }
             }
+            
+            
         }

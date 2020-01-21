@@ -31,12 +31,12 @@
 								<f:selectItems value="#{oltpMB.operationsList}"></f:selectItems>
 								<p:ajax 
 									listener="#{oltpMB.numberTransantionForTable()}"
-									update=":deletepart :insertpart :updatepart"></p:ajax>
+									update="deletepart insertpart updatepart"></p:ajax>
 							</p:selectOneButton>
 						</div>
 
 
-
+	
 
 
 						<p:outputPanel styleClass="ui-grid" id="insertpart"
@@ -60,7 +60,7 @@
 									<p:selectOneMenu value="#{oltpMB.tableSelected}">
 										<f:selectItem itemLabel="Select One" itemValue="" />
 										<f:selectItems value="#{oltpMB.listTable}"></f:selectItems>
-										<p:ajax update=":columnsTablePanel :dynaFormPanel"
+										<p:ajax update="columnsTablePanel dynaFormPanel"
 											event="valueChange" listener="#{oltpMB.getColumnsForTable()}"></p:ajax>
 									</p:selectOneMenu>
 
@@ -90,7 +90,7 @@
 									id="dynaFormPanel" style="margin-top:10px">
 
 									<pe:dynaForm id="dynaForm" value="#{oltpMB.model}"
-										autoSubmit="true" var="data1"
+										autoSubmit="true" var="data1" widgetVar="dynaFormWV"
 										columnClasses="ui-g-12 ui-md-12 ui-md-12">
 
 										<pe:dynaFormControl type="input" for="input1">
@@ -108,7 +108,7 @@
 								</p:outputPanel>
 								<div class="ui-g-12">
 									<p:commandButton value="Vai" update=":result"
-										process=":form:dynaFormPanel:dynaForm"
+										process="@form"
 										actionListener="#{oltpMB.oltpActionMethod()}" ajax="false"
 										icon="ui-icon-search" iconPos="right" style="width:auto"
 										styleClass="right" />
@@ -116,6 +116,10 @@
 							</p:outputPanel>
 							<p:outputPanel styleClass=" ui-g-1 ui-md-1 ui-md-1" />
 						</p:outputPanel>
+						
+						
+						
+						
 						<p:outputPanel styleClass="ui-grid" id="updatepart" style="margin-left: 25%;margin-right: 25%;">
 							<p:outputPanel styleClass="ui-g-12"
 								rendered="#{oltpMB.operationSelected eq 'UPDATE'}">
@@ -256,9 +260,9 @@
 			<script type="text/javascript">
 			function metroExtenderSimulazioneSintesiBar() {
 
-
+				
 				   this.cfg.grid = { drawBorder: false,
-				            shadow: false,        
+					            shadow: false,        
 				            background: "white"};
 				   this.cfg.legend= {
 					        show: false,
@@ -269,9 +273,21 @@
 			                }
 					        
 					    };
-
+		            this.cfg.seriesDefaults = {
+		                    renderer:$.jqplot.BarRenderer,
+		                    rendererOptions: { barWidth: 40 },
+		     		        axes: {
+		            		     xaxis: {
+		            		         renderer: $.jqplot.CategoryAxisRenderer,
+		            			}
+	            			},
+		            	pointLabels: { show: true, formatString:'%s'}
+		            };
 				   this.cfg.redraw;
-			}
+				   
+
+
+			};
 			</script>
 
 		</h:form>

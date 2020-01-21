@@ -42,7 +42,7 @@
 										style="margin-left:15%!important">
 
 										<f:selectItems value="#{olapMB.listTable}"></f:selectItems>
-										<p:ajax update="where groupBy select"
+										<p:ajax update="where groupBy"
 											listener="#{olapMB.getColumnsForTable()}"></p:ajax>
 									</p:selectManyMenu>
 								</p:outputPanel>
@@ -66,7 +66,7 @@
 													= <p:selectOneMenu id="sel" style="    max-width: 90px;"
 													value="#{data.value}">
 													<f:selectItem itemLabel="Select one" itemValue="" />
-													<f:selectItems value="#{oltpMB.list}" var="tag"
+													<f:selectItems value="#{olapMB.list}" var="tag"
 														itemLabel="#{tag.name}" itemValue="#{tag.id}" />
 												</p:selectOneMenu>
 											</pe:dynaFormControl>
@@ -106,15 +106,15 @@
 			</div>
 			<div class="card">
 				<h1 class="centerText">Result</h1>
-					<p:chart type="bar" model="#{olapMB.barModel}" widgetVar="cicci" 
-						id="cicci" style="width:auto;height:400px; margin: 0 auto;" />
+				<p:chart type="bar" model="#{olapMB.barModel}" widgetVar="cicci"
+					id="cicci" style="width:auto;height:400px; margin: 0 auto;" />
 			</div>
 			<script type="text/javascript">
 			function metroExtenderSimulazioneSintesiBar() {
 
-
+	
 				   this.cfg.grid = { drawBorder: false,
-				            shadow: false,        
+					            shadow: false,        
 				            background: "white"};
 				   this.cfg.legend= {
 					        show: false,
@@ -125,12 +125,24 @@
 			                }
 					        
 					    };
-
+		            this.cfg.seriesDefaults = {
+		                    renderer:$.jqplot.BarRenderer,
+		                    rendererOptions: { barWidth: 40 },
+		     		        axes: {
+		            		     xaxis: {
+		            		         renderer: $.jqplot.CategoryAxisRenderer,
+		            			}
+	            			},
+		            	pointLabels: { show: true, formatString:'%s'}
+		            };
 				   this.cfg.redraw;
-			}
+				   
+
+
+			};
 			</script>
-			
-			
+
+
 		</h:form>
 
 	</ui:define>
