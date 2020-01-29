@@ -228,7 +228,7 @@ public class OltpMB extends BaseMB {
 	}
 
 	private void createOperationsList() {
-		this.operationsList = new ArrayList();
+		this.operationsList = new ArrayList<String>();
 		this.operationsList.add("INSERT");
 		this.operationsList.add("UPDATE");
 		this.operationsList.add("DELETE");

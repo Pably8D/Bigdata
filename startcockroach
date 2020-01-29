@@ -1,0 +1,14 @@
+
+---Start cockroach---
+1) terminale
+cockroach start-single-node --insecure --logtostderr
+2)terminale
+cockroach sql --insecure
+
+root@:26257/defaultdb>  show databases;
+root@:26257/defaultdb>  CREATE DATABASE stackoverflow;
+root@:26257/defaultdb>  IMPORT TABLE stackoverflow.question (Id decimal, OwnerUserId decimal, Score decimal, TagCategory JSONB, Title STRING) CSV DATA ('nodelocal:///stackoverflow.QUESTION.csv') WITH delimiter = ';';  Time: 47.5122271s
+root@:26257/defaultdb>  IMPORT TABLE stackoverflow.user (CreationDate DATE, Id decimal, Location STRING, view decimal, fake STRING) CSV DATA ('nodelocal:///stackoverflow.USER.csv') WITH delimiter = ';'; Time: 1m2.6843615s
+root@:26257/defaultdb>  select * from stackoverflow.question, jsonb_array_elements(stackoverflow.question.tagcategory) AS items  where items->>'name' = 'mysql';
+root@:26257/defaultdb>  select * from stackoverflow.question, jsonb_array_elements(stackoverflow.question.tagcategory) AS items  where items -> 'Category'->>'name' = 'SQL';
+root@:26257/defaultdb>  select items->>'name', count(*) from stackoverflow.question, jsonb_array_elements(stackoverflow.question.tagcategory) AS items  where items-> 'Category'->>'name' = 'SQL' group by items->>'name';

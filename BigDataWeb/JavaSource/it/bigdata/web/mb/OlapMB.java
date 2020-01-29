@@ -2,6 +2,7 @@ package it.bigdata.web.mb;
 
 import it.bigdata.dto.Tag;
 import it.bigdata.dto.constants.Tables;
+import it.bigdata.ejb.service.cockroachdb.CockroachdbCrud;
 import it.bigdata.ejb.service.mongo.MongoCRUDImp;
 import it.bigdata.ejb.service.mysql.MySqlCrud;
 import java.util.ArrayList;
@@ -42,7 +43,8 @@ public class OlapMB extends BaseMB {
 	@EJB
 	MySqlCrud mySqlCrudService;
 	private BarChartModel barModel;
-	private int exceteTimes;
+	@EJB
+	CockroachdbCrud cockroachdbService;
 
 	@PostConstruct
 	public void init() {
@@ -50,19 +52,19 @@ public class OlapMB extends BaseMB {
 		this.model = new DynaFormModel();
 		this.barModel = new BarChartModel();
 		this.modelForWhere = new DynaFormModel();
-		this.list = new ArrayList(this.mongoServices.getAllTag());
-		this.db2Time = new HashMap();
-		this.db2Time.put("SQL", new LinkedList());
-		this.db2Time.put("NOSQL", new LinkedList());
-		this.db2Time.put("NEWSQL", new LinkedList());
+		this.list = new ArrayList<Tag>(this.mongoServices.getAllTag());
+		this.db2Time = new HashMap<String, LinkedList<Long>>();
+		this.db2Time.put("SQL", new LinkedList<Long>());
+		this.db2Time.put("NOSQL", new LinkedList<Long>());
+		this.db2Time.put("NEWSQL", new LinkedList<Long>());
 	}
 
 	private void populateTableList() {
-		this.listTable = new ArrayList();
+		this.listTable = new ArrayList<String>();
 		this.listTable.addAll(Tables.getNamesOfTables());
-		this.column2Value = new HashMap();
-		this.columnsSelected = new ArrayList();
-		this.column2ValueWhere = new HashMap();
+		this.column2Value = new HashMap<String, String>();
+		this.columnsSelected = new ArrayList<String>();
+		this.column2ValueWhere = new HashMap<String, String>();
 	}
 
 	public void getColumnsForTable() {
@@ -95,7 +97,6 @@ public class OlapMB extends BaseMB {
 		this.modelForWhere.getRegularRows().clear();
 		this.modelForWhere.getControls().clear();
 		DynaFormControl control = null;
-		DynaFormControl controlSelect = null;
 		DynaFormLabel label = null;
 		Iterator var5 = this.tableSelected.iterator();
 
@@ -135,8 +136,6 @@ public class OlapMB extends BaseMB {
 		if (this.model.getExtendedRows() != null)
 			this.model.getExtendedRows().clear();
 		DynaFormRow row = new DynaFormRow();
-		DynaFormControl control = null;
-		DynaFormControl controlSelect = null;
 		Iterator var5 = this.tableSelected.iterator();
 		row.addModel(this.model);
 		while (var5.hasNext()) {
@@ -165,7 +164,7 @@ public class OlapMB extends BaseMB {
 	}
 
 	public void oltpActionMethod() {
-		HashMap<String, HashMap<String, String>> tables2Columnvalue = new HashMap();
+		HashMap<String, HashMap<String, String>> tables2Columnvalue = new HashMap<String, HashMap<String, String>>();
 		Iterator var3 = this.tableSelected.iterator();
 
 		String nameTable;
@@ -188,7 +187,7 @@ public class OlapMB extends BaseMB {
 
 		while (var3.hasNext()) {
 			nameTable = (String) var3.next();
-			tables2Columnvalue.put(nameTable, new HashMap());
+			tables2Columnvalue.put(nameTable, new HashMap<String, String>());
 			String[] var7;
 			int var10 = (var7 = Tables.valueOf(nameTable).getCloumns()).length;
 
@@ -202,11 +201,11 @@ public class OlapMB extends BaseMB {
 
 		((LinkedList) this.db2Time.get("NOSQL")).add(this.executeNoSql(tables2Columnvalue, this.columnsSelected));
 		((LinkedList) this.db2Time.get("SQL")).add(this.mySqlCrudService.sql(tables2Columnvalue, this.extracted(tables2Columnvalue)));
+		((LinkedList) this.db2Time.get("NEWSQL")).add(this.cockroachdbService.sql(tables2Columnvalue, this.extracted(tables2Columnvalue)));
 		this.createBarModel();
 	}
 
 	private void createBarModel() {
-		++this.exceteTimes;
 		this.barModel.setTitle("Bar Chart");
 		this.barModel.setLegendPosition("ne");
 		this.barModel.setBarWidth(40);
@@ -221,7 +220,7 @@ public class OlapMB extends BaseMB {
 		Axis yAxis = this.barModel.getAxis(AxisType.Y);
 		yAxis.setLabel("Tempo");
 		yAxis.setMin(0);
-		ArrayList<Long> times = new ArrayList();
+		ArrayList<Long> times = new ArrayList<Long>();
 		Iterator var5 = this.db2Time.keySet().iterator();
 
 		while (var5.hasNext()) {

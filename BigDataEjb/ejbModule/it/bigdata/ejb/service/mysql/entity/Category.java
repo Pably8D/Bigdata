@@ -1,76 +1,51 @@
 package it.bigdata.ejb.service.mysql.entity;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
+
+/**
+ * The persistent class for the category database table.
+ * 
+ */
 @Entity
-@NamedQuery(
-   name = "Category.findAll",
-   query = "SELECT c FROM Category c"
-)
+@NamedQuery(name="Category.findAll", query="SELECT c FROM Category c")
 public class Category implements Serializable {
-   private static final long serialVersionUID = 1L;
-   @Id
-   private int id;
-   @Column(
-      name = "category_name"
-   )
-   private String categoryName;
-   @Column(
-      name = "fake"
-   )
-   private String fake;
-   @OneToMany(
-      mappedBy = "category"
-   )
-   private List<Tag> tags;
+	private static final long serialVersionUID = 1L;
 
-   public int getId() {
-      return this.id;
-   }
+	@Id
+	private int id;
 
-   public void setId(int id) {
-      this.id = id;
-   }
+	@Column(name="category_name")
+	private String categoryName;
 
-   public String getCategoryName() {
-      return this.categoryName;
-   }
+	private String fake;
 
-   public void setCategoryName(String categoryName) {
-      this.categoryName = categoryName;
-   }
+	public Category() {
+	}
 
-   public List<Tag> getTags() {
-      return this.tags;
-   }
+	public int getId() {
+		return this.id;
+	}
 
-   public void setTags(List<Tag> tags) {
-      this.tags = tags;
-   }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-   public String getFake() {
-      return this.fake;
-   }
+	public String getCategoryName() {
+		return this.categoryName;
+	}
 
-   public void setFake(String fake) {
-      this.fake = fake;
-   }
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
 
-   public Tag addTag(Tag tag) {
-      this.getTags().add(tag);
-      tag.setCategory(this);
-      return tag;
-   }
+	public String getFake() {
+		return this.fake;
+	}
 
-   public Tag removeTag(Tag tag) {
-      this.getTags().remove(tag);
-      tag.setCategory((Category)null);
-      return tag;
-   }
+	public void setFake(String fake) {
+		this.fake = fake;
+	}
+
 }

@@ -1,4 +1,3 @@
-BigDataDTO/.classpath
 .metadata
 bin/
 tmp/
@@ -10,8 +9,15 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+BigDataDTO/.classpath
+BigDataDTO/.settings/org.eclipse.wst.common.project.facet.core.xml
+BigDataEAR/.settings/org.eclipse.wst.common.project.facet.core.xml
+BigDataEjb/.classpath
+BigDataEjb/.settings/org.eclipse.wst.common.project.facet.core.xml
+BigDataEjb/build/
 BigDataWeb/.classpath
-
+BigDataWeb/.settings/
+RemoteSystemsTempFiles/
 
 # External tool builders
 .externalToolBuilders/

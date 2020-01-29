@@ -11,81 +11,70 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
-@NamedQuery(
-   name = "Tag.findAll",
-   query = "SELECT t FROM Tag t"
-)
+@NamedQuery(name = "Tag.findAll", query = "SELECT t FROM Tag t")
 public class Tag implements Serializable {
-   private static final long serialVersionUID = 1L;
-   @Id
-   private int id;
-   @Column(
-      name = "tag_name"
-   )
-   private String tagName;
-   @ManyToOne
-   @JoinColumn(
-      name = "tag_category_id"
-   )
-   private Category category;
-   @OneToMany(
-      mappedBy = "tag"
-   )
-   private List<TagQuestion> tagQuestions;
-   @Column(
-      name = "fake"
-   )
-   private String fake;
+	private static final long serialVersionUID = 1L;
+	@Id
+	private int id;
+	@Column(name = "TagName")
+	private String tagName;
+	@ManyToOne
+	@JoinColumn(name = "IdCategory")
+	private Category category;
+	@OneToMany(mappedBy = "tag")
+	private List<TagQuestion> tagQuestions;
+	@Column(name = "fake")
+	private String fake;
 
-   public int getId() {
-      return this.id;
-   }
+	public int getId() {
+		return this.id;
+	}
 
-   public void setId(int id) {
-      this.id = id;
-   }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-   public String getTagName() {
-      return this.tagName;
-   }
+	public String getTagName() {
+		return this.tagName;
+	}
 
-   public void setTagName(String tagName) {
-      this.tagName = tagName;
-   }
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
+	}
 
-   public Category getCategory() {
-      return this.category;
-   }
+	public Category getCategory() {
+		return this.category;
+	}
 
-   public void setCategory(Category category) {
-      this.category = category;
-   }
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 
-   public List<TagQuestion> getTagQuestions() {
-      return this.tagQuestions;
-   }
+	public List<TagQuestion> getTagQuestions() {
+		return this.tagQuestions;
+	}
 
-   public void setTagQuestions(List<TagQuestion> tagQuestions) {
-      this.tagQuestions = tagQuestions;
-   }
+	public void setTagQuestions(List<TagQuestion> tagQuestions) {
+		this.tagQuestions = tagQuestions;
+	}
 
-   public String getFake() {
-      return this.fake;
-   }
+	public String getFake() {
+		return this.fake;
+	}
 
-   public void setFake(String fake) {
-      this.fake = fake;
-   }
+	public void setFake(String fake) {
+		this.fake = fake;
+	}
 
-   public TagQuestion addTagQuestion(TagQuestion tagQuestion) {
-      this.getTagQuestions().add(tagQuestion);
-      tagQuestion.setTag(this);
-      return tagQuestion;
-   }
+	public TagQuestion addTagQuestion(TagQuestion tagQuestion) {
+		this.getTagQuestions().add(tagQuestion);
+		tagQuestion.setTag(this);
+		return tagQuestion;
+	}
 
-   public TagQuestion removeTagQuestion(TagQuestion tagQuestion) {
-      this.getTagQuestions().remove(tagQuestion);
-      tagQuestion.setTag((Tag)null);
-      return tagQuestion;
-   }
+	public TagQuestion removeTagQuestion(TagQuestion tagQuestion) {
+		this.getTagQuestions().remove(tagQuestion);
+		tagQuestion.setTag((Tag) null);
+		return tagQuestion;
+	}
 }

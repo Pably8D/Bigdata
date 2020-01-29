@@ -107,7 +107,7 @@
 									</pe:dynaForm>
 								</p:outputPanel>
 								<div class="ui-g-12">
-									<p:commandButton value="Vai" update=":result"
+									<p:commandButton value="Vai" update="@form"
 										process="@form"
 										actionListener="#{oltpMB.oltpActionMethod()}" ajax="false"
 										icon="ui-icon-search" iconPos="right" style="width:auto"
@@ -130,7 +130,7 @@
 									<p:selectOneMenu value="#{oltpMB.tableSelected}">
 										<f:selectItem itemLabel="Select One" itemValue="" />
 										<f:selectItems value="#{oltpMB.listTable}"></f:selectItems>
-										<p:ajax update=":setPanel" event="valueChange"
+										<p:ajax update="setPanel" event="valueChange"
 											listener="#{oltpMB.getColumnsForTable()}"></p:ajax>
 									</p:selectOneMenu>
 								</p:outputPanel>
@@ -179,7 +179,7 @@
 								</p:outputPanel>
 
 								<div class="ui-g-12">
-									<p:commandButton value="Vai" update=":result"
+									<p:commandButton value="Vai" update="result"
 										process=" :form:dynaFormUpdate"
 										action="#{oltpMB.oltpActionMethod()}" ajax="false"
 										icon="ui-icon-search" iconPos="right" style="width:auto"
@@ -201,7 +201,7 @@
 									<p:selectOneMenu value="#{oltpMB.tableSelected}" >
 										<f:selectItem itemLabel="Select One" itemValue="" />
 										<f:selectItems value="#{oltpMB.listTable}"></f:selectItems>
-										<p:ajax update=" :inputNumRecordToDelete" event="valueChange" listener="#{oltpMB.numberTransantionForTable()}"></p:ajax>
+										<p:ajax update="inputNumRecordToDelete" event="valueChange" listener="#{oltpMB.numberTransantionForTable()}"></p:ajax>
 									</p:selectOneMenu>
 								</p:outputPanel>
 								<p:outputPanel class="ui-g-12 ui-md-12 ui-md-12"
@@ -215,8 +215,8 @@
 									</p:slider>
 								</p:outputPanel>
 								<div class="ui-g-12">
-									<p:commandButton value="Vai" update=":result"
-										process=":form:dynaForm"
+									<p:commandButton value="Vai" update="result"
+										process="@form"
 										actionListener="#{oltpMB.oltpActionMethod()}" ajax="false"
 										icon="ui-icon-search" iconPos="right" style="width:auto"
 										styleClass="right" />
