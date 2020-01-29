@@ -10,6 +10,8 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+BigDataWeb/.classpath
+
 
 # External tool builders
 .externalToolBuilders/
