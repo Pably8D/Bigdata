@@ -267,7 +267,6 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 	public Long sql(HashMap<String, HashMap<String, String>> tables2Columnvalue,
 			HashMap<String, List<String>> columnsGroupBy) {
 		String select = "SELECT *  ";
-		Iterator var5 = columnsGroupBy.keySet().iterator();
 		String query = "";
 		String from;
 		String groupby;
@@ -275,7 +274,6 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 		from = " FROM ";
 		String where = " WHERE  1=1 ";
 		groupby = " GROUP BY ";
-		Iterator var8 = tables2Columnvalue.keySet().iterator();
 
 		for (String table : tables2Columnvalue.keySet()) {
 			// from part
@@ -341,74 +339,11 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 
 		query = query.concat(where);
 
-		if (groupby.length() > 11) {
+		if (!groupby.replace(" GROUP BY ", "").isEmpty()) {
 
 			query = query.concat(groupby);
 		}
 		System.out.println("------------------>" + query);
-//		while (var8.hasNext()) {
-//			query = (String) var8.next();
-//			from = from.concat("  " + query.toLowerCase() + " , ");
-//			Iterator var10 = ((HashMap) tables2Columnvalue.get(query)).keySet().iterator();
-//
-//			String grp;
-//			while (var10.hasNext()) {
-//				grp = (String) var10.next();
-//				if (grp.equalsIgnoreCase("Location")) {
-//					where = where.concat(" " + grp + " like '%"
-//							+ (String) ((HashMap) tables2Columnvalue.get(query)).get(grp) + "%' ,");
-//				} else {
-//					where = where.concat(
-//							" " + grp + " = " + (String) ((HashMap) tables2Columnvalue.get(query)).get(grp) + " ,");
-//				}
-//			}
-//
-//			for (String table : columnsGroupBy.keySet()) {
-//				for (String col : columnsGroupBy.get(table)) {
-//					if (col.equalsIgnoreCase(Tables.TAGS.getName())) {
-//						groupby = groupby
-//								.concat((col.toLowerCase() + ".").concat(Tables.TAGS.getCloumns()[0]).toLowerCase())
-//								.concat(" ,");
-//					} else {
-//						groupby = groupby.concat(col).concat(" ,");
-//					}
-//				}
-//			}
-//			if (groupby.substring(groupby.length() - 1).equals(",")) {
-//				groupby = groupby.substring(0, groupby.length() - 1);
-//			}
-//
-////         for(var10 = ((List)columnsGroupBy.get(query)).iterator(); var10.hasNext(); groupby = groupby.concat(grp).concat(" ,")) {
-////            grp = (String)var10.next();
-////         }
-//		}
-//
-//		if (columnsGroupBy.containsKey(Tables.QUESTION.getName().toUpperCase())
-//				&& columnsGroupBy.get(Tables.QUESTION.getName().toUpperCase()).contains(Tables.TAGS.getName())) {
-//			from = from.concat("tag_question, tag");
-//			where = where.substring(0, where.length() - 1)
-//					.concat(" and tag_question.IdQuestion = question.id and tag.id=tag_question.IdTag ");
-//		} else {
-//			from = from.substring(0, from.length() - 1);
-//			where = where.substring(0, where.length() - 1);
-//		}
-//
-//		if (!groupby.isEmpty()) {
-//			select = select.replace("*", "");
-//			select = select.concat(groupby.replace(" GROUP BY ", ""));
-//		}
-//
-//		if (select.substring(select.length() - 1).equals(",")) {
-//			select = select.substring(0, select.length() - 1);
-//		}
-//		query = select.concat(from);
-//
-//		query = query.concat(where);
-//
-//		if (groupby.length() > 11) {
-//
-//			query = query.concat(groupby);
-//		}
 
 		System.out.println("------------------>" + query);
 		Date startTime = new Date();

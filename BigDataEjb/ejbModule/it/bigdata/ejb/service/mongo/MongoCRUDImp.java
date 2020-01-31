@@ -272,7 +272,7 @@ public Set<Tag> getAllTag() {
             }
          }
 
-         System.out.println(pipeline);
+         System.out.println("--------NOSQL---------->"+pipeline);
          startTime = new Date();
          output = coll.aggregate(pipeline, AggregationOptions.builder().maxTime(30L, TimeUnit.MINUTES).allowDiskUse(true).build());
          int c = 0;
@@ -281,7 +281,7 @@ public Set<Tag> getAllTag() {
             System.out.println(obj);
          }
 
-         System.out.println(c);
+         System.out.println("------RESULT NOSQL------>"+c);
       }
 
       endTime = new Date();
