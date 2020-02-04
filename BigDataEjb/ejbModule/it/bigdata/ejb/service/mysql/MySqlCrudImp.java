@@ -330,6 +330,7 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 		if (!groupby.replace(" GROUP BY ", "").isEmpty()) {
 			select = select.replace("*", "");
 			select = select.concat(groupby.replace(" GROUP BY ", ""));
+			select = select.concat(" , COUNT(*)");
 		}
 
 		if (select.substring(select.length() - 1).equals(",")) {
@@ -343,9 +344,8 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 
 			query = query.concat(groupby);
 		}
-		System.out.println("------------------>" + query);
 
-		System.out.println("------------------>" + query);
+		System.out.println("---------SQL--------->" + query);
 		Date startTime = new Date();
 		this.em.createNativeQuery(query).getResultList();
 		Date endTime = new Date();

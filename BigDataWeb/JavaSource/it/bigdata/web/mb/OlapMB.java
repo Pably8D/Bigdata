@@ -202,6 +202,7 @@ public class OlapMB extends BaseMB {
 		((LinkedList) this.db2Time.get("NOSQL")).add(this.executeNoSql(tables2Columnvalue, this.columnsSelected));
 		((LinkedList) this.db2Time.get("SQL")).add(this.mySqlCrudService.sql(tables2Columnvalue, this.extracted(tables2Columnvalue)));
 		((LinkedList) this.db2Time.get("NEWSQL")).add(this.cockroachdbService.sql(tables2Columnvalue, this.extracted(tables2Columnvalue)));
+		System.out.println(this.db2Time.toString());
 		this.createBarModel();
 	}
 
@@ -234,21 +235,21 @@ public class OlapMB extends BaseMB {
 
 	private void initBarModel() {
 		ChartSeries db = new ChartSeries();
-		Iterator var3 = this.db2Time.keySet().iterator();
 
-		while (var3.hasNext()) {
-			String tipoDB = (String) var3.next();
+		for (String tipoDB : this.db2Time.keySet()) {
 			int j = 1;
-			Iterator var6 = ((LinkedList) this.db2Time.get(tipoDB)).iterator();
 
-			while (var6.hasNext()) {
-				Long i = (Long) var6.next();
+			for (Long i:this.db2Time.get(tipoDB)) {
+				
+
 				if (tipoDB != null && !((LinkedList) this.db2Time.get(tipoDB)).isEmpty()) {
-					db.setLabel(tipoDB + " " + j + "°");
-					db.set(tipoDB + " " + j + "°", i);
+					db.setLabel(tipoDB);
+					db.set(tipoDB+j , i);
 					++j;
 				}
+
 			}
+			
 		}
 
 		this.barModel.addSeries(db);
@@ -263,7 +264,7 @@ public class OlapMB extends BaseMB {
 	}
 
 	private HashMap<String, List<String>> extracted(HashMap<String, HashMap<String, String>> tables2Columnvalue) {
-		HashMap<String, List<String>> map = new HashMap();
+		HashMap<String, List<String>> map = new HashMap<String, List<String>>();
 		Iterator var4 = tables2Columnvalue.keySet().iterator();
 
 		String table;

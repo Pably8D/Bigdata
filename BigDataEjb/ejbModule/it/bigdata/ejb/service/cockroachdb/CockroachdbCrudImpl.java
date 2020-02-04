@@ -3,12 +3,23 @@ package it.bigdata.ejb.service.cockroachdb;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+
 import it.bigdata.dto.constants.Tables;
+import it.bigdata.ejb.service.mysql.entity.Category;
+import it.bigdata.ejb.service.mysql.entity.Question;
+import it.bigdata.ejb.service.mysql.entity.Tag;
+import it.bigdata.ejb.service.mysql.entity.TagQuestion;
+import it.bigdata.ejb.service.mysql.entity.User;
 
 /**
  * Session Bean implementation class CockroachdbCrudImpl
@@ -56,7 +67,8 @@ public class CockroachdbCrudImpl extends BaseService implements CockroachdbCrud 
 		String from = " FROM ";
 		String groupby = " GROUP BY ";
 		String where = " WHERE  1=1 ";
-		String having = " HAVING count(*) >7000";
+//		String having = " HAVING count(*) >7000";
+		String having = " ";
 
 		List<String> tables = new ArrayList<String>(tables2Columnvalue.keySet());
 		for (String table : tables) {
@@ -81,10 +93,10 @@ public class CockroachdbCrudImpl extends BaseService implements CockroachdbCrud 
 					where = where.concat(" and ");
 					if (column.equalsIgnoreCase("Location")) {
 						where = where.concat(" " + column + " like '%"
-								+ (String) ((HashMap) tables2Columnvalue.get(table)).get(column) + "%' ,");
+								+ (String) ((HashMap) tables2Columnvalue.get(table)).get(column) + "%' ");
 					} else {
 						where = where.concat(" " + column + " = "
-								+ (String) ((HashMap) tables2Columnvalue.get(table)).get(column) + " ,");
+								+ (String) ((HashMap) tables2Columnvalue.get(table)).get(column) );
 					}
 				}
 			}
@@ -118,14 +130,14 @@ public class CockroachdbCrudImpl extends BaseService implements CockroachdbCrud 
 		Query q = em.createNativeQuery(query);
 		System.out.println(q.getResultList());
 		Date endTime = new Date();
+		System.out.println(endTime.getTime() - startTime.getTime());
 		return new Long(endTime.getTime() - startTime.getTime());
 	}
 
 	/**
 	 * @see CockroachdbCrud#insert(int, HashMap<String,String>, String)
 	 */
-	public Long insert(int var1, HashMap<String, String> var2, String var3) {
-		// TODO Auto-generated method stub
+	public Long insert(int numTransactionSelected, HashMap<String, String> column2Value, String tableSelected) {
 		return null;
 	}
 

@@ -28,312 +28,354 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 @Stateless
-@Local({MongoCRUD.class})
+@Local({ MongoCRUD.class })
 @LocalBean
 public class MongoCRUDImp extends MongoClientProvider implements MongoCRUD {
-   public Set<String> getAllUserGroupByLocation(String groupByLocation) {
-      DBCollection coll = this.getDB().getCollection("question");
-      DBObject query = new BasicDBObject();
-      query.put("Score", "001");
-      coll.find(query);
-      Set<String> list = new HashSet();
-      return list;
-   }
+	public Set<String> getAllUserGroupByLocation(String groupByLocation) {
+		DBCollection coll = this.getDB().getCollection("question");
+		DBObject query = new BasicDBObject();
+		query.put("Score", "001");
+		coll.find(query);
+		Set<String> list = new HashSet();
+		return list;
+	}
 
-   @SuppressWarnings("rawtypes")
-public Set<Tag> getAllTag() {
-	   
-	   
-      Iterator cursor = this.getDB().getCollection("QUESTION").distinct("TagCategory").iterator();
-      Gson gson = new Gson();
-      HashSet list = new HashSet();
+	@SuppressWarnings("rawtypes")
+	public Set<Tag> getAllTag() {
 
-      try {
-         while(cursor.hasNext()) {
-            String obj = gson.toJson(cursor.next());
-            Tag t = (Tag)gson.fromJson(obj, Tag.class);
-            list.add(t);
-         }
-      } catch (Exception var6) {
-         var6.printStackTrace();
-      }
+		Iterator cursor = this.getDB().getCollection("QUESTION").distinct("TagCategory").iterator();
+		Gson gson = new Gson();
+		HashSet list = new HashSet();
 
-      return list;
-   }
+		try {
+			while (cursor.hasNext()) {
+				String obj = gson.toJson(cursor.next());
+				Tag t = (Tag) gson.fromJson(obj, Tag.class);
+				list.add(t);
+			}
+		} catch (Exception var6) {
+			var6.printStackTrace();
+		}
 
-   public Set<String> getQuestionsByUser(String id) {
-      return null;
-   }
+		return list;
+	}
 
-   public Set<String> getAnswerByUser(String id) {
-      return null;
-   }
+	public Set<String> getQuestionsByUser(String id) {
+		return null;
+	}
 
-   public Set<String> getQuestionsByTags(List<String> tags) {
-      return null;
-   }
+	public Set<String> getAnswerByUser(String id) {
+		return null;
+	}
 
-   public Set<String> getAllUser() {
-      return null;
-   }
+	public Set<String> getQuestionsByTags(List<String> tags) {
+		return null;
+	}
 
-   public Long insert(int numTransactionSelected, HashMap<String, String> column2Value, String tableSelected) {
-      ObjectMapper mapper = new ObjectMapper();
-      Map<String, Object> t = null;
-      Gson gson = new Gson();
-      DBCollection collection = this.getDB().getCollection(tableSelected.toUpperCase());
-      DBCursor c = collection.find().sort(new BasicDBObject("Id", -1)).limit(1);
+	public Set<String> getAllUser() {
+		return null;
+	}
 
-      while(c.hasNext()) {
-         String obj = gson.toJson(c.next());
+	public Long insert(int numTransactionSelected, HashMap<String, String> column2Value, String tableSelected) {
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Object> t = null;
+		Gson gson = new Gson();
+		DBCollection collection = this.getDB().getCollection(tableSelected.toUpperCase());
+		DBCursor c = collection.find().sort(new BasicDBObject("Id", -1)).limit(1);
 
-         try {
-            t = (Map)mapper.readValue(obj, HashMap.class);
-         } catch (Exception var15) {
-            var15.printStackTrace();
-         }
-      }
+		while (c.hasNext()) {
+			String obj = gson.toJson(c.next());
 
-      int id = (new Double(Math.random())).intValue();
-      if (t != null) {
-         id = (Integer)t.get("Id");
-      }
+			try {
+				t = (Map) mapper.readValue(obj, HashMap.class);
+			} catch (Exception var15) {
+				var15.printStackTrace();
+			}
+		}
 
-      Date startTime = new Date();
-      List<DBObject> documents = new ArrayList();
-      if (numTransactionSelected != 0) {
-         while(true) {
-            if (numTransactionSelected <= 0) {
-               collection.insert(documents);
-               break;
-            }
+		int id = (new Double(Math.random())).intValue();
+		if (t != null) {
+			id = (Integer) t.get("Id");
+		}
 
-            BasicDBObject document = new BasicDBObject();
-            document.put("Id", id);
-            document.put("fake", "1");
-            ++id;
-            Iterator var14 = column2Value.keySet().iterator();
+		Date startTime = new Date();
+		List<DBObject> documents = new ArrayList();
+		if (numTransactionSelected != 0) {
+			while (true) {
+				if (numTransactionSelected <= 0) {
+					collection.insert(documents);
+					break;
+				}
 
-            while(var14.hasNext()) {
-               String c1 = (String)var14.next();
-               document.put(c1, column2Value.get(c1));
-            }
+				BasicDBObject document = new BasicDBObject();
+				document.put("Id", id);
+				document.put("fake", "1");
+				++id;
+				Iterator var14 = column2Value.keySet().iterator();
 
-            documents.add(document);
-            --numTransactionSelected;
-         }
-      }
+				while (var14.hasNext()) {
+					String c1 = (String) var14.next();
+					document.put(c1, column2Value.get(c1));
+				}
 
-      Date endTime = new Date();
-      return new Long(endTime.getTime() - startTime.getTime());
-   }
+				documents.add(document);
+				--numTransactionSelected;
+			}
+		}
 
-   public Long update(int numTransactionSelected, HashMap<String, String> column2Value, HashMap<String, String> column2ValueWhere, String tableSelected) {
-      DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
-      BasicDBObject newDocument = new BasicDBObject();
-      Date startTime = new Date();
-      Iterator var9 = column2Value.keySet().iterator();
+		Date endTime = new Date();
+		return new Long(endTime.getTime() - startTime.getTime());
+	}
 
-      while(var9.hasNext()) {
-         String col = (String)var9.next();
-         if (!column2Value.keySet().isEmpty()) {
-            newDocument.put(col, column2ValueWhere.get(col));
-         }
-      }
+	public Long update(int numTransactionSelected, HashMap<String, String> column2Value,
+			HashMap<String, String> column2ValueWhere, String tableSelected) {
+		DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
+		BasicDBObject newDocument = new BasicDBObject();
+		Date startTime = new Date();
+		Iterator var9 = column2Value.keySet().iterator();
 
-      BasicDBObject searchQuery = new BasicDBObject();
-      Iterator var10 = column2ValueWhere.keySet().iterator();
+		while (var9.hasNext()) {
+			String col = (String) var9.next();
+			if (!column2Value.keySet().isEmpty()) {
+				newDocument.put(col, column2ValueWhere.get(col));
+			}
+		}
 
-      while(var10.hasNext()) {
-         String col = (String)var10.next();
-         if (!column2ValueWhere.keySet().isEmpty()) {
-            searchQuery.append(col, column2ValueWhere.get(col));
-         }
-      }
+		BasicDBObject searchQuery = new BasicDBObject();
+		Iterator var10 = column2ValueWhere.keySet().iterator();
 
-      collection.update(searchQuery, newDocument);
-      Date endTime = new Date();
-      return new Long(endTime.getTime() - startTime.getTime());
-   }
+		while (var10.hasNext()) {
+			String col = (String) var10.next();
+			if (!column2ValueWhere.keySet().isEmpty()) {
+				searchQuery.append(col, column2ValueWhere.get(col));
+			}
+		}
 
-   public Long searchFakeData(String tableSelected) {
-      DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
-      BasicDBObject searchQuery = new BasicDBObject();
-      searchQuery.append("fake", "1");
-      return new Long(collection.count(searchQuery));
-   }
+		collection.update(searchQuery, newDocument);
+		Date endTime = new Date();
+		return new Long(endTime.getTime() - startTime.getTime());
+	}
 
-   public Long delete(String tableSelected) {
-      DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
-      Date startTime = new Date();
-      BasicDBObject searchQuery = new BasicDBObject();
-      searchQuery.append("fake", "1");
-      Date endTime = new Date();
-      collection.remove(searchQuery);
-      return new Long(endTime.getTime() - startTime.getTime());
-   }
+	public Long searchFakeData(String tableSelected) {
+		DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.append("fake", "1");
+		return new Long(collection.count(searchQuery));
+	}
 
-   public Long sql(HashMap<String, HashMap<String, String>> tables2Columnvalue, HashMap<String, List<String>> tables2columnsGroupBy) {
-      Date startTime = null;
-      Date endTime = null;
-      DBObject groupBy = null;
-      DBObject sort = null;
-      List<DBObject> pipeline = null;
-      DBObject where = new BasicDBObject();
-      DBObject groupByForUser = null;
-      DBObject whereForUser = new BasicDBObject();
-      Cursor output;
-      List pipeline2;
-      DBObject p;
-      if (tables2Columnvalue.keySet().size() == 1 || (tables2Columnvalue.containsKey(Tables.QUESTION.getName().toUpperCase()) && tables2Columnvalue.containsKey(Tables.TAGS.getName().toUpperCase().concat("S")))) {
-         Entry<String, HashMap<String, String>> entry = (Entry)tables2Columnvalue.entrySet().iterator().next();
-         String tableSelected = (String)entry.getKey();
-         HashMap<String, String> column2Value = (HashMap)entry.getValue();
-         DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
-         if (column2Value != null && tables2columnsGroupBy.get(tableSelected)== null || ((List)tables2columnsGroupBy.get(tableSelected)).isEmpty()) {
-            this.createWhereCondition(column2Value, where);
-         } else {
-            groupBy = this.createGroupByCondition((List)tables2columnsGroupBy.get(tableSelected));
-            this.createWhereConditionForGroupBy(column2Value, where);
-            BasicDBObject sortFields = new BasicDBObject("count", -1);
-            sort = new BasicDBObject("$sort", sortFields);
-         }
+	public Long delete(String tableSelected) {
+		DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
+		Date startTime = new Date();
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.append("fake", "1");
+		Date endTime = new Date();
+		collection.remove(searchQuery);
+		return new Long(endTime.getTime() - startTime.getTime());
+	}
 
-         startTime = new Date();
-         DBObject obj;
-         
-         if (where != null && !where.keySet().isEmpty() && groupBy != null && !groupBy.keySet().isEmpty()) {
-            pipeline2 = Arrays.asList(where, groupBy, sort);
-            AggregationOutput outputAggr = collection.aggregate(where, new DBObject[]{groupBy, sort});
-            Iterator var18 = outputAggr.results().iterator();
+	public Long sql(HashMap<String, HashMap<String, String>> tables2Columnvalue,
+			HashMap<String, List<String>> tables2columnsGroupBy) {
+		Date startTime = null;
+		Date endTime = null;
+		DBObject groupBy = null;
+		DBObject unwind = null;
+		DBObject sort = null;
+		DBCollection collection = null;
+		List<DBObject> pipeline = null;
+		DBObject where = null;
+		DBObject groupByForUser = null;
+		DBObject whereForUser = new BasicDBObject();
+		Cursor output;
+		List pipeline2;
+		DBObject p;
+		if (tables2Columnvalue.containsKey(Tables.USER.getName().toUpperCase())
+				&& tables2Columnvalue.containsKey(Tables.QUESTION.getName().toUpperCase())) {
 
-            while(var18.hasNext()) {
-               obj = (DBObject)var18.next();
-               System.out.println(obj);
-            }
-         } else if (where != null && !where.keySet().isEmpty()) {
-            DBCursor cursor;
-            if (groupBy != null && !groupBy.keySet().isEmpty()) {
-               cursor = collection.find();
-            } else {
-               cursor = collection.find(where);
-               if (cursor.hasNext()) {
-                  p = cursor.next();
-                  System.out.println(p);
-               }
-            }
-         } else {
-            pipeline2 = Arrays.asList(groupBy, sort);
-            output = collection.aggregate(pipeline2, AggregationOptions.builder().allowDiskUse(true).build());
-            if (output.hasNext()) {
-               obj = (DBObject)output.next();
-               System.out.println(obj);
-            }
-         }
-      } else if(tables2Columnvalue.containsKey(Tables.USER.getName().toUpperCase()) && tables2Columnvalue.containsKey(Tables.QUESTION.getName().toUpperCase())){
-         DBCollection coll = this.getDB().getCollection("user");
-         if (tables2Columnvalue.get("user") != null) {
-            this.createWhereConditionForGroupBy((HashMap)tables2Columnvalue.get("user"), whereForUser);
-         } else {
-            this.createWhereConditionForGroupBy((HashMap)tables2Columnvalue.get("USER"), whereForUser);
-         }
+			DBCollection coll = this.getDB().getCollection("user");
+			if (tables2Columnvalue.get("user") != null) {
+				this.createWhereConditionForGroupBy((HashMap) tables2Columnvalue.get("user"), whereForUser);
+			} else {
+				this.createWhereConditionForGroupBy((HashMap) tables2Columnvalue.get("USER"), whereForUser);
+			}
 
-         List colOf;
-         if (tables2columnsGroupBy.get("user") != null) {
-            colOf = (List)tables2columnsGroupBy.get("user");
-            groupByForUser = this.createGroupByCondition(colOf);
-         } else {
-            colOf = (List)tables2columnsGroupBy.get("USER");
-            groupByForUser = this.createGroupByCondition(colOf);
-         }
+			List colOf;
+			if (tables2columnsGroupBy.get("user") != null) {
+				colOf = (List) tables2columnsGroupBy.get("user");
+				groupByForUser = this.createGroupByCondition(colOf);
+			} else {
+				colOf = (List) tables2columnsGroupBy.get("USER");
+				groupByForUser = this.createGroupByCondition(colOf);
+			}
 
-         DBObject lookupFields = new BasicDBObject("from", "question");
-         lookupFields.put("localField", "OnerwUserId");
-         lookupFields.put("foreignField", "Id");
-         lookupFields.put("as", "questions");
-         DBObject lookup = new BasicDBObject("$lookup", lookupFields);
-         if (tables2columnsGroupBy.containsKey("question")) {
-            groupBy = this.createGroupByCondition((List)tables2columnsGroupBy.get("question"));
-         } else {
-            groupBy = this.createGroupByCondition((List)tables2columnsGroupBy.get("QUESTION"));
-         }
+			DBObject lookupFields = new BasicDBObject("from", "question");
+			lookupFields.put("localField", "OnerwUserId");
+			lookupFields.put("foreignField", "Id");
+			lookupFields.put("as", "questions");
+			DBObject lookup = new BasicDBObject("$lookup", lookupFields);
+			if (tables2columnsGroupBy.containsKey("question")) {
+				groupBy = this.createGroupByCondition((List) tables2columnsGroupBy.get("question"));
+			} else {
+				groupBy = this.createGroupByCondition((List) tables2columnsGroupBy.get("QUESTION"));
+			}
 
-         this.createWhereConditionForGroupBy((HashMap)tables2Columnvalue.get("question"), where);
-         BasicDBObject sortFields = new BasicDBObject("count", -1);
-         new BasicDBObject("$sort", sortFields);
-         pipeline2 = Arrays.asList(whereForUser, groupByForUser, lookup, where, groupBy);
-         pipeline = new ArrayList();
-         Iterator var28 = pipeline2.iterator();
+			this.createWhereConditionForGroupBy((HashMap) tables2Columnvalue.get("question"), where);
+			BasicDBObject sortFields = new BasicDBObject("count", -1);
+			new BasicDBObject("$sort", sortFields);
+			pipeline2 = Arrays.asList(whereForUser, groupByForUser, lookup, where, groupBy);
+			pipeline = new ArrayList();
+			Iterator var28 = pipeline2.iterator();
 
-         while(var28.hasNext()) {
-            p = (DBObject)var28.next();
-            if (p != null && !p.keySet().isEmpty()) {
-               pipeline.add(p);
-            }
-         }
+			while (var28.hasNext()) {
+				p = (DBObject) var28.next();
+				if (p != null && !p.keySet().isEmpty()) {
+					pipeline.add(p);
+				}
+			}
 
-         System.out.println("--------NOSQL---------->"+pipeline);
-         startTime = new Date();
-         output = coll.aggregate(pipeline, AggregationOptions.builder().maxTime(30L, TimeUnit.MINUTES).allowDiskUse(true).build());
-         int c = 0;
-         if (output.hasNext()) {
-            DBObject obj = (DBObject)output.next();
-            System.out.println(obj);
-         }
+			System.out.println("--------NOSQL---------->" + pipeline);
+			startTime = new Date();
+			output = coll.aggregate(pipeline,
+					AggregationOptions.builder().maxTime(30L, TimeUnit.MINUTES).allowDiskUse(true).build());
+			int c = 0;
+			if (output.hasNext()) {
+				DBObject obj = (DBObject) output.next();
+				System.out.println(obj);
+			}
 
-         System.out.println("------RESULT NOSQL------>"+c);
-      }
+			System.out.println("------RESULT NOSQL------>" + c);
+		} else {
+			for (String table : tables2Columnvalue.keySet()) {
+				if (!table.equalsIgnoreCase(Tables.TAGS.getName().concat("S"))) {
+					collection = this.getDB().getCollection(table.toUpperCase());
+					pipeline = queryForsingleTable(table, tables2Columnvalue, tables2columnsGroupBy, collection, where,
+							groupBy, unwind);
+				}
+			}
 
-      endTime = new Date();
-      return new Long(endTime.getTime() - startTime.getTime());
-   }
+			System.out.println("NOSQL-------------------------------->" + pipeline);
+			startTime = new Date();
 
-   private DBObject createGroupByCondition(List<String> columnsGroupBy) {
-      DBObject groupBy = null;
-      Map<String, Object> dbObjIdMap = new HashMap();
-      if(columnsGroupBy!=null && !columnsGroupBy.isEmpty())
-      for(String col:columnsGroupBy) {
-         dbObjIdMap.put(col, "$".concat("questions.").concat(col));
-      }
+			output = collection.aggregate(pipeline, AggregationOptions.builder().allowDiskUse(true).build());
 
-      if (!dbObjIdMap.isEmpty()) {
-         groupBy = new BasicDBObject("$group", (new BasicDBObject("_id", new BasicDBObject(dbObjIdMap))).append("count", new BasicDBObject("$sum", 1)));
-      }
+		}
 
-      return groupBy;
-   }
+		endTime = new Date();
+		return new Long(endTime.getTime() - startTime.getTime());
+	}
 
-   private DBObject createWhereCondition(HashMap<String, String> column2Value, DBObject where) {
-      Iterator var4 = column2Value.keySet().iterator();
+	private List<DBObject> queryForsingleTable(String table,
+			HashMap<String, HashMap<String, String>> tables2Columnvalue,
+			HashMap<String, List<String>> tables2columnsGroupBy, DBCollection collection, DBObject where,
+			DBObject groupBy, DBObject unwind) {
+		List<DBObject> pipeline = null;
 
-      while(var4.hasNext()) {
-         String col = (String)var4.next();
-         if (col.contains("Date")) {
-            where.put(col, new BasicDBObject("$gte", column2Value.get(col)));
-         } else if (col.contains("Location")) {
-            where.put(col, new BasicDBObject("$regex", column2Value.get(col)));
-         } else {
-            where.put(col, new BasicDBObject("$eq", column2Value.get(col)));
-         }
-      }
+		HashMap<String, String> column2Value = tables2Columnvalue.get(table);
+		// WHERE CONDITION
+		if (column2Value != null && !column2Value.isEmpty()) {
+			where = createWhereCondition(column2Value);
+		}
+		// GROUP BY
+		if (!tables2columnsGroupBy.isEmpty()) {
+			groupBy = createGroupByCondition(tables2columnsGroupBy.get(table));
+			if (tables2columnsGroupBy.get(table).contains(Tables.TAGS.getName())
+					|| tables2columnsGroupBy.get(table).contains(Tables.CATEGORY.getName())) {
+				unwind = new BasicDBObject("$unwind", "$TagCategory");
+			}
+		}
 
-      return where;
-   }
+		if (groupBy != null && where != null) {
+			if (unwind != null) {
+				pipeline = Arrays.asList(where, unwind, groupBy);
+			} else {
+				pipeline = Arrays.asList(where, groupBy);
+			}
+		} else if (groupBy != null && where == null) {
+			if (unwind != null) {
+				pipeline = Arrays.asList(unwind, groupBy);
+			} else {
+				pipeline = Arrays.asList(groupBy);
+			}
+		} else {
+			pipeline = Arrays.asList(where);
+		}
+		return pipeline;
+	}
 
-   private DBObject createWhereConditionForGroupBy(HashMap<String, String> column2Value, DBObject where) {
-      if (column2Value != null) {
-         Iterator var4 = column2Value.keySet().iterator();
+	private DBObject createGroupByCondition(List<String> columnsGroupBy) {
+		DBObject groupBy = null;
+		Map<String, Object> dbObjIdMap = new HashMap<String, Object>();
 
-         while(var4.hasNext()) {
-            String col = (String)var4.next();
-            if (col.contains("Date")) {
-               where.put("$gte", new BasicDBObject(col, column2Value.get(col)));
-            } else {
-               where.put("$match", new BasicDBObject(col, column2Value.get(col)));
-            }
-         }
-      }
+		if (columnsGroupBy != null && !columnsGroupBy.isEmpty())
+			for (String col : columnsGroupBy) {
+				if (col.equalsIgnoreCase(Tables.TAGS.getName())) {
+					dbObjIdMap.put(col, "$TagCategory.name");
+				} else if (col.equalsIgnoreCase(Tables.CATEGORY.getName())) {
+					dbObjIdMap.put(col, "$TagCategory.Category.name");
+				} else {
+					dbObjIdMap.put(col, "$".concat(col));
+				}
+			}
 
-      return where;
-   }
+		if (!dbObjIdMap.isEmpty()) {
+			groupBy = new BasicDBObject("$group", (new BasicDBObject("_id", new BasicDBObject(dbObjIdMap)))
+					.append("count", new BasicDBObject("$sum", 1)));
+		}
+
+		return groupBy;
+	}
+
+	private DBObject createGroupByCondition2(List<String> columnsGroupBy) {
+		DBObject groupBy = null;
+		Map<String, Object> dbObjIdMap = new HashMap();
+		if (columnsGroupBy != null && !columnsGroupBy.isEmpty())
+			for (String col : columnsGroupBy) {
+				dbObjIdMap.put(col, "$".concat("question.").concat(col));
+			}
+
+		if (!dbObjIdMap.isEmpty()) {
+			groupBy = new BasicDBObject("$group", (new BasicDBObject("_id", new BasicDBObject(dbObjIdMap)))
+					.append("count", new BasicDBObject("$sum", 1)));
+		}
+
+		return groupBy;
+	}
+
+	private DBObject createWhereCondition(HashMap<String, String> column2Value) {
+
+		DBObject where = new BasicDBObject();
+		for (String col : column2Value.keySet()) {
+			if (col.contains("Date")) {
+				where.put("$gte", new BasicDBObject(col, column2Value.get(col)));
+			} else {
+				where.put("$match", new BasicDBObject(col, column2Value.get(col)));
+			}
+//			if (col.contains("Date")) {
+//				where.put(col, new BasicDBObject("$gte", column2Value.get(col)));
+//			} else if (col.contains("Location")) {
+//				where.put(col, new BasicDBObject("$match", column2Value.get(col)));
+//			} else {
+//				where.put(col, new BasicDBObject("$eq", column2Value.get(col)));
+//			}
+		}
+
+		return where;
+	}
+
+	private DBObject createWhereConditionForGroupBy(HashMap<String, String> column2Value, DBObject where) {
+		
+		if (column2Value != null) {
+			Iterator var4 = column2Value.keySet().iterator();
+
+			while (var4.hasNext()) {
+				String col = (String) var4.next();
+				if (col.contains("Date")) {
+					where.put("$gte", new BasicDBObject(col, column2Value.get(col)));
+				} else {
+					where.put("$match", new BasicDBObject(col, column2Value.get(col)));
+				}
+			}
+		}
+
+		return where;
+	}
 }

@@ -18,6 +18,8 @@ BigDataEjb/build/
 BigDataWeb/.classpath
 BigDataWeb/.settings/
 RemoteSystemsTempFiles/
+BigDataWeb/WebContent/WEB-INF/classes/.gitignore
+BigDataWeb/WebContent/WEB-INF/classes/it/bigdata/web/mb/OlapMB.class
 
 # External tool builders
 .externalToolBuilders/
