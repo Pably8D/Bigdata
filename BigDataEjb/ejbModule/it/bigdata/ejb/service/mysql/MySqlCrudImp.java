@@ -2,12 +2,15 @@ package it.bigdata.ejb.service.mysql;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import it.bigdata.dto.User;
 import it.bigdata.dto.constants.Tables;
 import it.bigdata.ejb.service.mysql.entity.Category;
 import it.bigdata.ejb.service.mysql.entity.Question;
 import it.bigdata.ejb.service.mysql.entity.Tag;
 import it.bigdata.ejb.service.mysql.entity.TagQuestion;
-import it.bigdata.ejb.service.mysql.entity.User;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +20,8 @@ import java.util.Map;
 import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -29,11 +34,11 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 		Map<String, String> col2val = new HashMap();
 		Iterator var7 = column2Value.keySet().iterator();
 
-		while (var7.hasNext()) {
-			String i = (String) var7.next();
-			col2val.put(i.substring(0, 1).toLowerCase().concat(i.substring(1, i.length())),
-					(String) column2Value.get(i));
-		}
+//		while (var7.hasNext()) {
+//			String i = (String) var7.next();
+//			col2val.put(i.substring(0, 1).toLowerCase().concat(i.substring(1, i.length())),
+//					(String) column2Value.get(i));
+//		}
 
 		Gson gson = new Gson();
 		Date startTime = null;
@@ -41,12 +46,12 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 		String obj;
 		if (tableSelected.equalsIgnoreCase(Tables.CATEGORY.getName())) {
 			try {
-				obj = gson.toJson(col2val);
+				obj = gson.toJson(column2Value);
 				Category c = (Category) mapper.readValue(obj, Category.class);
 
 				for (startTime = new Date(); numTransactionSelected > 0; --numTransactionSelected) {
 					this.em.persist(c);
-					this.em.flush();
+//					this.em.flush();
 				}
 
 				endTime = new Date();
@@ -57,7 +62,7 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 
 		if (tableSelected.equalsIgnoreCase(Tables.TAGS.getName())) {
 			try {
-				obj = gson.toJson(col2val);
+				obj = gson.toJson(column2Value);
 				Tag t = (Tag) mapper.readValue(obj, Tag.class);
 				Category categoria = new Category();
 				categoria.setId(0);
@@ -66,7 +71,7 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 
 				for (startTime = new Date(); numTransactionSelected > 0; --numTransactionSelected) {
 					this.em.persist(t);
-					this.em.flush();
+//					this.em.flush();
 				}
 
 				endTime = new Date();
@@ -77,16 +82,20 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 
 		if (tableSelected.equalsIgnoreCase(Tables.USER.getName())) {
 			try {
-				obj = gson.toJson(col2val);
-				User ute=(User) mapper.readValue(obj, User.class);
+				obj = gson.toJson(column2Value);
+				Gson gsonB = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				User ute = gsonB.fromJson(obj, User.class);
+				System.out.println(ute);
 				startTime = new Date();
-				while ( numTransactionSelected > 0) {
-					User u = new User();
+				while (numTransactionSelected > 0) {
+					it.bigdata.ejb.service.mysql.entity.User u = new it.bigdata.ejb.service.mysql.entity.User();
+
 					u.setCreationDate(ute.getCreationDate());
 					u.setLocation(ute.getLocation());
 					u.setFake("1");
 					this.em.persist(u);
-					this.em.flush();
+//					this.em.flush();
+
 					--numTransactionSelected;
 				}
 
@@ -98,29 +107,26 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 
 		if (tableSelected.equalsIgnoreCase(Tables.QUESTION.getName())) {
 			try {
-				gson.toJson(col2val);
+				gson.toJson(column2Value);
 				Question q = new Question();
 				Iterator var12 = column2Value.keySet().iterator();
 
 				while (var12.hasNext()) {
 					String col = (String) var12.next();
 					if (!((String) column2Value.get(col)).isEmpty()) {
-						switch (col.hashCode()) {
-						case 79711858:
-							if (col.equals("Score")) {
-								q.setScore(new Integer((String) column2Value.get(col)));
-							}
-							break;
-						case 80818744:
-							if (col.equals("Title")) {
-								q.setTitle((String) column2Value.get(col));
-							}
-							break;
-						case 1477157561:
-							if (col.equals("OwnerUserId")) {
-								q.setOwnerUserId(new Integer((String) column2Value.get(col)));
-							}
+
+						if (col.equals("Score")) {
+							q.setScore(new Integer((String) column2Value.get(col)));
 						}
+
+						if (col.equals("Title")) {
+							q.setTitle((String) column2Value.get(col));
+						}
+
+						if (col.equals("OwnerUserId")) {
+							q.setOwnerUserId(new Integer((String) column2Value.get(col)));
+						}
+
 					}
 				}
 
@@ -129,7 +135,7 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 				tq.setFake("1");
 				tq.setTag_id(new Integer((String) column2Value.get("Tag")));
 				tq.setQuestion(q);
-				List<TagQuestion> tags = new ArrayList();
+				List<TagQuestion> tags = new ArrayList<TagQuestion>();
 				tags.add(tq);
 				q.setTagQuestions(tags);
 
@@ -149,11 +155,13 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 
 	public Long update(int numTransactionSelected, HashMap<String, String> column2Value,
 			HashMap<String, String> column2ValueWhere, String tableSelected) {
-		new ObjectMapper();
+
 		Map<String, String> col2val = new HashMap(column2Value);
 		Gson gson = new Gson();
 		Date startTime = null;
 		Date endTime = null;
+		ObjectMapper mapper = new ObjectMapper();
+		String obj;
 		if (tableSelected.equalsIgnoreCase(Tables.CATEGORY.getName())) {
 			try {
 				gson.toJson(col2val);
@@ -206,19 +214,25 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 		boolean j;
 		if (tableSelected.equalsIgnoreCase(Tables.USER.getName())) {
 			try {
-				User u = new User();
-				criteria = this.getSession(this.em).createCriteria(User.class);
-				criteria.add(Restrictions.eq("fake", u.getFake()));
-				j = false;
-				startTime = new Date();
-				list = criteria.list();
-				var30 = list.iterator();
+				obj = gson.toJson(column2Value);
+				Gson gsonB = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				User ute = gsonB.fromJson(obj, User.class);
+				ute.setFake("1");
+				System.out.println(ute);
 
-				while (var30.hasNext()) {
-					User i = (User) var30.next();
-					this.em.persist(i);
-					this.em.flush();
-				}
+
+				StringBuilder sb = new StringBuilder("UPDATE ").append(Tables.USER.getName().toLowerCase())
+						.append(" SET Location = ? , creationDate = ? , Views = ?  ").append(" WHERE fake = ? ");
+
+				String query = sb.toString();
+
+				Query preparedStatement = em.createNativeQuery(query);
+				preparedStatement.setParameter(1, "test");
+				preparedStatement.setParameter(2, (ute.getCreationDate() != null) ? ute.getCreationDate() : startTime);
+				preparedStatement.setParameter(3, (ute.getViews() != 0) ? ute.getViews() : column2Value.get("Views"));
+				preparedStatement.setParameter(4, ute.getFake());
+				startTime = new Date();
+				preparedStatement.executeUpdate();
 
 				endTime = new Date();
 			} catch (Exception var18) {
@@ -252,14 +266,11 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 		return new Long(endTime.getTime() - startTime.getTime());
 	}
 
-	public Integer searchFakeData(String tableSelected) {
-		return (Integer) this.em.createNativeQuery("select count(*) from " + tableSelected + " where fake = 1")
-				.getSingleResult();
-	}
+
 
 	public Long delete(String tableSelected) {
 		Date startTime = new Date();
-		this.em.createNativeQuery("delete from " + tableSelected + " where fake = 1").executeUpdate();
+		this.em.createNativeQuery("delete from " + tableSelected + " where fake = '1' ").executeUpdate();
 		Date endTime = new Date();
 		return new Long(endTime.getTime() - startTime.getTime());
 	}
@@ -277,50 +288,53 @@ public class MySqlCrudImp extends BaseService implements MySqlCrud {
 
 		for (String table : tables2Columnvalue.keySet()) {
 			// from part
-				if(!(table.replace("S", "")).equalsIgnoreCase(Tables.TAGS.getName())) {
-					from = from.concat("  " + table.toLowerCase() + " ,");
-				}else {
-					from = from.concat("  " + table.replace("S", "").toLowerCase() + " ,");
-				}
+			if (!(table.replace("S", "")).equalsIgnoreCase(Tables.TAGS.getName())) {
+				from = from.concat("  " + table.toLowerCase() + " ,");
+			} else {
+				from = from.concat("  " + table.replace("S", "").toLowerCase() + " ,");
+			}
 
 			// where part for this table
 			for (String column : tables2Columnvalue.get(table).keySet()) {
-				where= where.concat(" and ");
+				where = where.concat(" and ");
 				if (column.equalsIgnoreCase("Location")) {
 					where = where.concat(" " + column + " like '%"
 							+ (String) ((HashMap) tables2Columnvalue.get(table)).get(column) + "%' ,");
-				}else if(column.equalsIgnoreCase(Tables.QUESTION.getCloumns()[4])) {
+				} else if (column.equalsIgnoreCase(Tables.QUESTION.getCloumns()[4])) {
 					where = where.concat(" " + "and tag.Id" + " = "
 							+ (String) ((HashMap) tables2Columnvalue.get(table)).get(column) + " ,");
 				} else {
-					where = where.concat(" " + column + " = "
-							+ (String) ((HashMap) tables2Columnvalue.get(table)).get(column) + " ,");
+					where = where.concat(" " + column + " = '"
+							+ (String) ((HashMap) tables2Columnvalue.get(table)).get(column) + "' ,");
 				}
 			}
 			// groupby for this table
-			if(columnsGroupBy.get(table)!=null)
-			for (String col : columnsGroupBy.get(table)) {
-				if (col.equalsIgnoreCase(Tables.TAGS.getName())) {
-					groupby = groupby
-							.concat((col.toLowerCase() + ".").concat(Tables.TAGS.getCloumns()[0]).toLowerCase())
-							.concat(" ,");
-				} else {
-					groupby = groupby.concat(col).concat(" ,");
+			if (columnsGroupBy.get(table) != null)
+				for (String col : columnsGroupBy.get(table)) {
+					if (col.equalsIgnoreCase(Tables.TAGS.getName())) {
+						groupby = groupby
+								.concat((col.toLowerCase() + ".").concat(Tables.TAGS.getCloumns()[0]).toLowerCase())
+								.concat(" ,");
+					} else {
+						groupby = groupby.concat(col).concat(" ,");
+					}
 				}
-			}
 		}
-		if(tables2Columnvalue.keySet().contains(Tables.QUESTION.getName().toUpperCase()) && tables2Columnvalue.keySet().contains(Tables.TAGS.getName().toUpperCase().concat("S"))) {
+		if (tables2Columnvalue.keySet().contains(Tables.QUESTION.getName().toUpperCase())
+				&& tables2Columnvalue.keySet().contains(Tables.TAGS.getName().toUpperCase().concat("S"))) {
 			from = from.concat("tag_question ");
-		}else {
+		} else {
 			from = from.substring(0, from.length() - 1);
 		}
 
-		if (columnsGroupBy.containsKey(Tables.QUESTION.getName().toUpperCase()) && columnsGroupBy.get(Tables.QUESTION.getName().toUpperCase()).contains(Tables.TAGS.getName()) || where.contains("tag.Id")) {
+		if (columnsGroupBy.containsKey(Tables.QUESTION.getName().toUpperCase())
+				&& columnsGroupBy.get(Tables.QUESTION.getName().toUpperCase()).contains(Tables.TAGS.getName())
+				|| where.contains("tag.Id")) {
 
 			where = where.substring(0, where.length() - 1)
 					.concat(" and tag_question.IdQuestion = question.id and tag.id=tag_question.IdTag ");
 		} else {
-			
+
 			where = where.substring(0, where.length() - 1);
 		}
 

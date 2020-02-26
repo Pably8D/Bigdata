@@ -3,6 +3,7 @@ package it.bigdata.web.mb;
 import it.bigdata.dto.Constants;
 import it.bigdata.dto.Tag;
 import it.bigdata.dto.constants.Tables;
+import it.bigdata.ejb.service.cockroachdb.CockroachdbCrud;
 import it.bigdata.ejb.service.mongo.MongoCRUDImp;
 import it.bigdata.ejb.service.mysql.MySqlCrud;
 import java.util.ArrayList;
@@ -35,6 +36,9 @@ public class OltpMB extends BaseMB {
 	MySqlCrud mySqlCrudService;
 	@EJB
 	MongoCRUDImp mongoServices;
+	@EJB
+	CockroachdbCrud cockroachdbService;
+	
 	private List<Tag> list;
 	private List<String> listTable;
 	private String tableSelected;
@@ -102,7 +106,7 @@ public class OltpMB extends BaseMB {
 
 	public void numberTransantionForTable() {
 		if (this.operationSelected.equals("DELETE") && this.tableSelected != null) {
-			this.maxNumeberTransantion = this.mongoServices.searchFakeData(this.tableSelected);
+//			this.maxNumeberTransantion = this.mongoServices.searchFakeData(this.tableSelected);
 			this.numTransactionSelected = 0;
 		} else {
 			this.maxNumeberTransantion = Constants.DIECIMILA.longValue();
@@ -129,10 +133,8 @@ public class OltpMB extends BaseMB {
 
 		if (this.tableSelected != null && this.tableSelected.equalsIgnoreCase(Tables.QUESTION.getName())) {
 			Dato d = new Dato("", false);
-			if (this.columnsSelected.contains(Tables.TAGS.getName())) {
-				d.setRendered(new Boolean(true));
-				d.setColumn(Tables.TAGS.getName());
-			}
+			d.setRendered(new Boolean(true));
+			d.setColumn(Tables.TAGS.getName());
 
 			row.addControl(d, "select");
 		}
@@ -151,19 +153,18 @@ public class OltpMB extends BaseMB {
 		}
 
 		if (this.operationSelected.equals("INSERT")) {
-			((ArrayList) this.db2Time.get("SQL")).add(
-					this.mySqlCrudService.insert(this.numTransactionSelected, this.column2Value, this.tableSelected));
-			((ArrayList) this.db2Time.get("NOSQL"))
-					.add(this.mongoServices.insert(this.numTransactionSelected, this.column2Value, this.tableSelected));
+			((ArrayList) this.db2Time.get("SQL")).add(this.mySqlCrudService.insert(this.numTransactionSelected, this.column2Value, this.tableSelected));
+			((ArrayList) this.db2Time.get("NOSQL")).add(this.mongoServices.insert(this.numTransactionSelected, this.column2Value, this.tableSelected));
+			((ArrayList) this.db2Time.get("NEWSQL")).add(this.cockroachdbService.insert(this.numTransactionSelected, this.column2Value, this.tableSelected));
 		} else if (this.operationSelected.equals("UPDATE")) {
 			this.column2ValueWhere.put("fake", "1");
-			((ArrayList) this.db2Time.get("SQL")).add(this.mySqlCrudService.update(this.numTransactionSelected,
-					this.column2Value, this.column2ValueWhere, this.tableSelected));
-			((ArrayList) this.db2Time.get("NOSQL")).add(this.mongoServices.update(this.numTransactionSelected,
-					this.column2Value, this.column2ValueWhere, this.tableSelected));
+			((ArrayList) this.db2Time.get("SQL")).add(this.mySqlCrudService.update(this.numTransactionSelected,this.column2Value, this.column2ValueWhere, this.tableSelected));
+			((ArrayList) this.db2Time.get("NOSQL")).add(this.mongoServices.update(this.numTransactionSelected,this.column2Value, this.column2ValueWhere, this.tableSelected));
+			((ArrayList) this.db2Time.get("NEWSQL")).add(this.cockroachdbService.update(this.numTransactionSelected,this.column2Value, this.column2ValueWhere, this.tableSelected));
 		} else {
-			((ArrayList) this.db2Time.get("SQL")).add(this.mongoServices.delete(this.tableSelected));
-			((ArrayList) this.db2Time.get("NOSQL")).add(this.mySqlCrudService.delete(this.tableSelected));
+			((ArrayList) this.db2Time.get("SQL")).add(this.mySqlCrudService.delete(this.tableSelected));
+			((ArrayList) this.db2Time.get("NOSQL")).add(this.mongoServices.delete(this.tableSelected));
+			((ArrayList) this.db2Time.get("NEWSQL")).add(this.cockroachdbService.delete(this.tableSelected));
 		}
 
 		this.createBarModel();

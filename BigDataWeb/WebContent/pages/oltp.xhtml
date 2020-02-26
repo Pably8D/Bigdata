@@ -201,18 +201,13 @@
 									<p:selectOneMenu value="#{oltpMB.tableSelected}" >
 										<f:selectItem itemLabel="Select One" itemValue="" />
 										<f:selectItems value="#{oltpMB.listTable}"></f:selectItems>
-										<p:ajax update="inputNumRecordToDelete" event="valueChange" listener="#{oltpMB.numberTransantionForTable()}"></p:ajax>
+										
 									</p:selectOneMenu>
 								</p:outputPanel>
 								<p:outputPanel class="ui-g-12 ui-md-12 ui-md-12"
 									rendered="#{oltpMB.operationSelected eq 'DELETE' and oltpMB.tableSelected.length()>0}">
-									<h3>Number Record</h3>
-									<p:inputText id="inputNumRecordToDelete"
-										value="#{oltpMB.numTransactionSelected}" />
-									<p:slider for="inputNumRecordToDelete"
-										maxValue="#{oltpMB.maxNumeberTransantion}">
-										<p:ajax event="slideEnd" listener="#{oltpMB.onSlideEnd}" />
-									</p:slider>
+									<h3>Where Fake = 1 </h3>
+									
 								</p:outputPanel>
 								<div class="ui-g-12">
 									<p:commandButton value="Vai" update="result"

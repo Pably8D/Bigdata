@@ -11,6 +11,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import it.bigdata.dto.Tag;
 import it.bigdata.dto.constants.Tables;
+import sun.security.jca.GetInstance.Instance;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,7 +83,7 @@ public class MongoCRUDImp extends MongoClientProvider implements MongoCRUD {
 		Gson gson = new Gson();
 		DBCollection collection = this.getDB().getCollection(tableSelected.toUpperCase());
 		DBCursor c = collection.find().sort(new BasicDBObject("Id", -1)).limit(1);
-
+		int id=0;
 		while (c.hasNext()) {
 			String obj = gson.toJson(c.next());
 
@@ -93,34 +94,33 @@ public class MongoCRUDImp extends MongoClientProvider implements MongoCRUD {
 			}
 		}
 
-		int id = (new Double(Math.random())).intValue();
+//		int id = (new Double(Math.random())).intValue();
 		if (t != null) {
-			id = (Integer) t.get("Id");
+			if(t.get("Id") instanceof Double)
+			id = new Integer(((Double) t.get("Id")).intValue());
+			else {
+			id = new Integer(((Integer) t.get("Id")).intValue());
+			}
 		}
 
 		Date startTime = new Date();
 		List<DBObject> documents = new ArrayList();
 		if (numTransactionSelected != 0) {
-			while (true) {
-				if (numTransactionSelected <= 0) {
-					collection.insert(documents);
-					break;
-				}
-
+			while (numTransactionSelected > 0) {
 				BasicDBObject document = new BasicDBObject();
 				document.put("Id", id);
 				document.put("fake", "1");
 				++id;
 				Iterator var14 = column2Value.keySet().iterator();
 
-				while (var14.hasNext()) {
-					String c1 = (String) var14.next();
+				for (String c1:column2Value.keySet()) {
 					document.put(c1, column2Value.get(c1));
 				}
-
-				documents.add(document);
+				collection.insert(document);
+//				documents.add(document);
 				--numTransactionSelected;
 			}
+//				collection.insert(documents);
 		}
 
 		Date endTime = new Date();
@@ -129,47 +129,47 @@ public class MongoCRUDImp extends MongoClientProvider implements MongoCRUD {
 
 	public Long update(int numTransactionSelected, HashMap<String, String> column2Value,
 			HashMap<String, String> column2ValueWhere, String tableSelected) {
-		DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
-		BasicDBObject newDocument = new BasicDBObject();
-		Date startTime = new Date();
-		Iterator var9 = column2Value.keySet().iterator();
 
-		while (var9.hasNext()) {
-			String col = (String) var9.next();
-			if (!column2Value.keySet().isEmpty()) {
-				newDocument.put(col, column2ValueWhere.get(col));
+		DBCollection collection = this.getDB().getCollection(tableSelected.toUpperCase());
+		BasicDBObject newDocument = new BasicDBObject();
+
+
+		for (String col :column2Value.keySet()) {
+			if (!column2Value.keySet().isEmpty() && column2Value.get(col)!=null && !column2Value.get(col).isEmpty()) {
+				newDocument.put(col, column2Value.get(col));
 			}
 		}
 
 		BasicDBObject searchQuery = new BasicDBObject();
-		Iterator var10 = column2ValueWhere.keySet().iterator();
 
-		while (var10.hasNext()) {
-			String col = (String) var10.next();
-			if (!column2ValueWhere.keySet().isEmpty()) {
+		for (String col :column2ValueWhere.keySet()) {
+			if (!column2ValueWhere.keySet().isEmpty() &&  column2ValueWhere.get(col)!=null && !column2ValueWhere.get(col).isEmpty()) {
 				searchQuery.append(col, column2ValueWhere.get(col));
 			}
 		}
-
-		collection.update(searchQuery, newDocument);
+		BasicDBObject setQuery = new BasicDBObject();
+		setQuery.append("$set", newDocument);
+		Date startTime = new Date();
+		collection.update(searchQuery, setQuery, false, true);
 		Date endTime = new Date();
 		return new Long(endTime.getTime() - startTime.getTime());
 	}
 
 	public Long searchFakeData(String tableSelected) {
-		DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
+		DBCollection collection = this.getDB().getCollection(tableSelected.toUpperCase());
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.append("fake", "1");
 		return new Long(collection.count(searchQuery));
 	}
 
 	public Long delete(String tableSelected) {
-		DBCollection collection = this.getDB().getCollection(tableSelected.toLowerCase());
+		DBCollection collection = this.getDB().getCollection(tableSelected.toUpperCase());
 		Date startTime = new Date();
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.append("fake", "1");
-		Date endTime = new Date();
 		collection.remove(searchQuery);
+		Date endTime = new Date();
+		System.out.println("-------------------"+(endTime.getTime() - startTime.getTime()));
 		return new Long(endTime.getTime() - startTime.getTime());
 	}
 
