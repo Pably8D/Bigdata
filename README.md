@@ -2,7 +2,7 @@
 
 L’obiettivo del progetto é quello analizzare funzionalitá e prestazioni di un database
 SQL, NoSQL e NewSql. L’ intento é quello di implementare un applicativo Web
-di analisi e reporting che illustra con opportune dashboard il comportamento dei
+di analisi e reporting che illustra con opportune dashboard l'efficenza in termini di tempo dei
 diversi database :
 1. In ambito OLTP : Operazioni ACID
 2. In ambito OLAP : Operazioni di aggregation e slicing
